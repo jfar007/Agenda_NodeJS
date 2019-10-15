@@ -9,14 +9,14 @@ class EventManager {
 
     obtenerDataInicial() {
         let url = this.urlBase + "/all"
-        $.get(url, (response) => {
+        $.get(url, {user: sessionStorage._id},(response) => {
             this.inicializarCalendario(response)
         })
     }
 
     eliminarEvento(evento) {
-        let eventId = evento.id
-        $.post('/events/delete/'+eventId, {id: eventId}, (response) => {
+        let eventId = evento._id
+        $.post('/events/delete/'+eventId, {_id: eventId}, (response) => {
             alert(response)
         })
     }
@@ -41,10 +41,12 @@ class EventManager {
             let url = this.urlBase + "/new"
             if (title != "" && start != "") {
                 let ev = {
+					user: sessionStorage._id,
                     title: title,
                     start: start,
                     end: end
                 }
+				console.log(ev);
                 $.post(url, ev, (response) => {
                     alert(response)
                 })
@@ -87,7 +89,7 @@ class EventManager {
                 center: 'title',
                 right: 'month,agendaWeek,basicDay'
             },
-            defaultDate: '2016-11-01',
+            defaultDate: '2019-10-01',
             navLinks: true,
             editable: true,
             eventLimit: true,
@@ -117,6 +119,63 @@ class EventManager {
                 }
             })
         }
+		
+		actualizarEvento(evento) {
+   			
+		     let id = evento._id,
+				start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss');
+			let fend = "";
+				if(evento.end != "" && evento.end != null){
+					end =  moment(evento.end).format('YYYY-MM-DD HH:mm:ss');
+				}
+				let tt = evento.title;
+			// let	form_data = new FormData();
+
+		  // if (!$('#allDay').is(':checked')) {
+				// end = $('#end_date').val()
+				// start_hour = $('#start_hour').val()
+				// end_hour = $('#end_hour').val()
+				// start = start + 'T' + start_hour
+				// end = end + 'T' + end_hour
+			// }
+       var start_date = start.substr(0,10)
+        // end_date = end.substr(0,10)
+        var start_hour = start.substr(11,8)
+        // end_hour = end.substr(11,8)
+		
+	
+        // form_data.append('_id', id)
+        // form_data.append('start', start)
+        // form_data.append('end', end)
+		start =  start_date + 'T' + start_hour;
+
+  
+        $.post('/events/update/'+id, {_id: id,title: tt, start: start , end: fend }, (response) => {
+            alert(response)
+        })
+    		
+		
+        // $.ajax({
+          // url: '/events/update/'+id,
+          // dataType: "json",
+          // cache: false,
+          // processData: false,
+          // contentType: false,
+          // data: form_data,
+          // type: 'POST',
+          // success: (data) =>{
+            // if (data.msg=="OK") {
+              // alert('Se ha actualizado el evento exitosamente')
+            // }else {
+              // alert(data.msg)
+            // }
+          // },
+          // error: function(){
+            // alert("error en la comunicación con el servidor");
+          // }
+        // })
+    }
     }
 
     const Manager = new EventManager()
+
