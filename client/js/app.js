@@ -120,13 +120,12 @@ class EventManager {
             })
         }
 		
-		actualizarEvento(evento) {
-   			
+		actualizarEvento(evento) {   			
 		     let id = evento._id,
 				start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss');
 			let fend = "";
 				if(evento.end != "" && evento.end != null){
-					end =  moment(evento.end).format('YYYY-MM-DD HH:mm:ss');
+					fend =  moment(evento.end).format('YYYY-MM-DD HH:mm:ss');
 				}
 				let tt = evento.title;
 			// let	form_data = new FormData();
@@ -152,8 +151,7 @@ class EventManager {
   
         $.post('/events/update/'+id, {_id: id,title: tt, start: start , end: fend }, (response) => {
             alert(response)
-        })
-    		
+        })   		
 		
         // $.ajax({
           // url: '/events/update/'+id,

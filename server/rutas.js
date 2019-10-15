@@ -20,17 +20,6 @@ Router.get('/all', function(req, res) {
     });
 })
 
-// Obtener un usuario por su id
-Router.get('/', function(req, res) {
-    let nombre = req.query.nombre
-    Users.findOne({usuario: nombre}).exec(function(err, doc){
-        if (err) {
-            res.status(500)
-            res.json(err)
-        }
-        res.json(doc)
-    })
-})
 
 // Agregar a un evento B
 Router.post('/new', function(req, res) {
@@ -68,36 +57,16 @@ Router.post('/delete/:id', function(req, res) {
     })
 })
 
-// Inactivar un usuario por su id
-Router.post('/inactive/:id', function(req, res) {
-
-})
 
 // Actualizar un evento por su id B
-Router.post('/update/:id', function(req, res) {
-	
-	
-	// let uid = req.body._id;
-    // let fstart = req.body.start;
-	// let fend = req.body.end;
-	// var newObjectId = new ObjectID.createFromHexString(uid);
-	// console.log(ObjectId.fromString(uid) + ' ' + fstart +' ' +fend);
-	// ObjectId.toHexString()
-	// res.json(Evento)
-	// console.log(newObjectId + ' - ' + fstart);
-    try{
-		const {title,start, end} = req.body
-		console.log('req.body._id '+ req.body._id + ' Title ' + title + ' start ' + start + ' end ' + end);
-		const Evento = {title, start, end}
+Router.post('/update/:id', async(req, res) => {
+console.log(req.body);
+const { title, start, end } = req.body
 
-	Events.findByIdAndUpdate(req.body._id, Evento);
-	
-		// Events.updateOne({_id: newObjectId.toHexString()},{$set: {start: fstart}})
-			res.json({msg : "OK"});
-	}catch(e){
-		console.log("Error actualizando registro " + e);
-		res.json({error: "Error actualizando registro " + e});
-	}
+const newEvent = { title, start, end }
+await Events.findByIdAndUpdate(req.params.id, newEvent)
+res.json({ status: 'Tarea actualizada' })
+
 })
 
 
